@@ -1,3 +1,4 @@
+<pre><code>
 !Command: show running-config
 !Running configuration last done at: Mon Dec  7 20:20:09 2020
 !Time: Mon Dec  7 20:20:11 2020
@@ -301,3 +302,4 @@ boot nxos bootflash:/nxos.9.2.2.bin
 
 
 !end
+</code></pre>
