@@ -82,10 +82,16 @@
 ##### Конфигурация оборудования :
 
 [a-nxos-sp1](https://github.com/dmn111/otus1/blob/master/a-nxos-sp1.conf.md)
+
 [a-nxos-sp2](https://github.com/dmn111/otus1/blob/master/a-nxos-sp2.conf.md)
+
 [a-nxos-lf3](https://github.com/dmn111/otus1/blob/master/a-nxos-lf3.conf.md)
+
 [a-nxos-lf4](https://github.com/dmn111/otus1/blob/master/a-nxos-lf4.conf.md)
+
 [a-nxos-lf7](https://github.com/dmn111/otus1/blob/master/a-nxos-lf7.conf.md)
+
 [b-nxos-sp1](https://github.com/dmn111/otus1/blob/master/b-nxos-sp1.conf.md)
+
 [b-nxos-lf1](https://github.com/dmn111/otus1/blob/master/b-nxos-lf1.conf.md)
 
