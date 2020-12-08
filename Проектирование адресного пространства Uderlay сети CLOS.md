@@ -2,7 +2,7 @@
 
 #### Схема сети:
 
-![](D:\IT.projects\GitHub\dmn111\otus1\Cxема Underlay сети CLOS.PNG)
+![](https://github.com/dmn111/otus1/blob/master/Cx%D0%B5%D0%BC%D0%B0%20Underlay%20%D1%81%D0%B5%D1%82%D0%B8%20CLOS.PNG)
 
 
 
@@ -81,5 +81,5 @@
 
 Конфигурация оборудования :
 
-[a-nxos-sp1] (https://github.com/dmn111/otus1/blob/master/a-nxos-sp1.conf.md)
+[a-nxos-sp1](https://github.com/dmn111/otus1/blob/master/a-nxos-sp1.conf.md)
 
