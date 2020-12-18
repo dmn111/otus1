@@ -1,7 +1,9 @@
 <pre><code>
+
+
 !Command: show running-config
-!Running configuration last done at: Mon Dec  7 20:00:57 2020
-!Time: Mon Dec  7 20:00:57 2020
+!Running configuration last done at: Mon Dec 14 19:54:26 2020
+!Time: Mon Dec 14 19:54:26 2020
 
 version 9.2(2) Bios:version  
 hostname a-nxos-lf7
@@ -14,10 +16,14 @@ vdc a-nxos-lf7 id 1
   limit-resource m4route-mem minimum 58 maximum 58
   limit-resource m6route-mem minimum 8 maximum 8
 
-username admin password 5 $5$IXyAZFqJ$PuGgLlEVmIpQZE0Ch93YX6wq2wdQM/IEi5Px9p0DT5/  role network-admin
+feature ospf
+feature bfd
+
+no password strength-check
+username admin password 5 $5$GUhcLLiY$mabDN7CV7XNrjLzvnbbsKRdj1qUyd4/bdxFXVW0qYbD  role network-admin
 ip domain-lookup
 copp profile strict
-snmp-server user admin network-admin auth md5 0x74a7c6bb5aa1fed5f694bafcf1c79e19 priv 0x74a7c6bb5aa1fed5f694bafcf1c79e19 localizedkey
+snmp-server user admin network-admin auth md5 0x3d4238519bbcc2c14275a61810781543 priv 0x3d4238519bbcc2c14275a61810781543 localizedkey
 rmon event 1 description FATAL(1) owner PMON@FATAL
 rmon event 2 description CRITICAL(2) owner PMON@CRITICAL
 rmon event 3 description ERROR(3) owner PMON@ERROR
@@ -37,11 +43,19 @@ interface Ethernet1/3
 interface Ethernet1/4
   no switchport
   ip address 10.77.1.10/30
+  ip ospf network point-to-point
+  no ip ospf passive-interface
+  ip router ospf 1 area 0.0.0.0
+  ip ospf bfd
   no shutdown
 
 interface Ethernet1/5
   no switchport
   ip address 10.77.2.10/30
+  ip ospf network point-to-point
+  no ip ospf passive-interface
+  ip router ospf 1 area 0.0.0.0
+  ip ospf bfd
   no shutdown
 
 interface Ethernet1/6
@@ -295,13 +309,18 @@ interface mgmt0
 
 interface loopback1
   ip address 10.77.255.7/32
+  ip router ospf 1 area 0.0.0.0
 line console
 line vty
 boot nxos bootflash:/nxos.9.2.2.bin 
+router ospf 1
+  router-id 10.77.255.7
+  passive-interface default
 
 
 !
 
 
 !end
+
 </code></pre>

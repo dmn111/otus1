@@ -1,7 +1,9 @@
 <pre><code>
+
+
 !Command: show running-config
-!Running configuration last done at: Mon Dec  7 20:20:09 2020
-!Time: Mon Dec  7 20:20:11 2020
+!Running configuration last done at: Mon Dec 14 20:54:20 2020
+!Time: Mon Dec 14 20:54:21 2020
 
 version 9.2(2) Bios:version  
 hostname a-nxos-lf4
@@ -13,6 +15,9 @@ vdc a-nxos-lf4 id 1
   limit-resource u6route-mem minimum 96 maximum 96
   limit-resource m4route-mem minimum 58 maximum 58
   limit-resource m6route-mem minimum 8 maximum 8
+
+feature ospf
+feature bfd
 
 no password strength-check
 username admin password 5 $5$dAKPeNGm$Pos90bF.sLAXvjhJJHzgsTT8Z/odzNjRJMcA3qtrzTB  role network-admin
@@ -33,12 +38,24 @@ interface Ethernet1/1
 
 interface Ethernet1/2
   no switchport
+  no ip redirects
   ip address 10.77.2.2/30
+  no ipv6 redirects
+  ip ospf network point-to-point
+  no ip ospf passive-interface
+  ip router ospf 1 area 0.0.0.0
+  ip ospf bfd
   no shutdown
 
 interface Ethernet1/3
   no switchport
+  no ip redirects
   ip address 10.77.1.6/30
+  no ipv6 redirects
+  ip ospf network point-to-point
+  no ip ospf passive-interface
+  ip router ospf 1 area 0.0.0.0
+  ip ospf bfd
   no shutdown
 
 interface Ethernet1/4
@@ -293,13 +310,22 @@ interface Ethernet1/128
 
 interface mgmt0
   vrf member management
+
+interface loopback1
+  ip address 10.77.255.4/32
+  ip router ospf 1 area 0.0.0.0
 line console
 line vty
 boot nxos bootflash:/nxos.9.2.2.bin 
+router ospf 1
+  bfd
+  router-id 10.77.255.4
+  passive-interface default
 
 
 !
 
 
 !end
+
 </code></pre>

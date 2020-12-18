@@ -1,7 +1,9 @@
 <pre><code>
+
+
 !Command: show running-config
-!Running configuration last done at: Mon Dec  7 19:48:51 2020
-!Time: Mon Dec  7 19:48:52 2020
+!Running configuration last done at: Mon Dec 14 20:54:47 2020
+!Time: Mon Dec 14 20:54:48 2020
 
 version 9.2(2) Bios:version  
 hostname a-nxos-sp1
@@ -13,6 +15,9 @@ vdc a-nxos-sp1 id 1
   limit-resource u6route-mem minimum 96 maximum 96
   limit-resource m4route-mem minimum 58 maximum 58
   limit-resource m6route-mem minimum 8 maximum 8
+
+feature ospf
+feature bfd
 
 no password strength-check
 username admin password 5 $5$h3YGHkM.$/bOUMJv7dJQHVGV1ibyTXc52oD3qy64HIeTie9QN/35  role network-admin
@@ -31,22 +36,47 @@ vrf context management
 
 interface Ethernet1/1
   no switchport
+  speed 1000
+  duplex full
+  no ip redirects
   ip address 10.77.1.13/30
+  ip ospf network point-to-point
+  no ip ospf passive-interface
+  ip router ospf 1 area 0.0.0.0
+  ip ospf bfd
   no shutdown
 
 interface Ethernet1/2
   no switchport
+  no ip redirects
   ip address 10.77.1.1/30
+  no ipv6 redirects
+  ip ospf network point-to-point
+  no ip ospf passive-interface
+  ip router ospf 1 area 0.0.0.0
+  ip ospf bfd
   no shutdown
 
 interface Ethernet1/3
   no switchport
+  no ip redirects
   ip address 10.77.1.5/30
+  no ipv6 redirects
+  ip ospf network point-to-point
+  no ip ospf passive-interface
+  ip router ospf 1 area 0.0.0.0
+  ip ospf bfd
   no shutdown
 
 interface Ethernet1/4
   no switchport
+  no ip redirects
   ip address 10.77.1.9/30
+  no ipv6 redirects
+  ip ospf network point-to-point
+  no ip ospf passive-interface
+  ip router ospf 1 area 0.0.0.0
+  ip ospf bfd
   no shutdown
 
 interface Ethernet1/5
@@ -302,9 +332,14 @@ interface mgmt0
 
 interface loopback1
   ip address 10.77.255.1/32
+  ip router ospf 1 area 0.0.0.0
 line console
 line vty
 boot nxos bootflash:/nxos.9.2.2.bin 
+router ospf 1
+  bfd
+  router-id 10.77.255.1
+  passive-interface default
 
 
 !
