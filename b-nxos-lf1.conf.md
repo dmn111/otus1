@@ -2,8 +2,8 @@
 
 
 !Command: show running-config
-!Running configuration last done at: Wed Dec 16 18:53:25 2020
-!Time: Wed Dec 16 18:53:26 2020
+!Running configuration last done at: Tue Jan  5 09:38:53 2021
+!Time: Tue Jan  5 09:38:58 2021
 
 version 9.2(2) Bios:version  
 hostname b-nxos-lf1
@@ -38,7 +38,7 @@ interface Ethernet1/1
 
 interface Ethernet1/2
   no switchport
-  ip address 10.66.1.6/30
+  ip address 10.66.1.11/31
   no ipv6 redirects
   ip ospf network point-to-point
   no ip ospf passive-interface
