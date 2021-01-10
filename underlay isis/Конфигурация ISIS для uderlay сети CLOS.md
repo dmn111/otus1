@@ -4,16 +4,52 @@
 
 #### Схема сети:
 
-![](https://github.com/dmn111/otus1/blob/master/Cx%D0%B5%D0%BC%D0%B0%20Underlay%20%D1%81%D0%B5%D1%82%D0%B8%20CLOS.PNG)
+![](https://github.com/dmn111/otus1/blob/master/underlay%20isis/%D0%A1%D1%85%D0%B5%D0%BC%D0%B0%20ISIS%20%D0%B4%D0%BB%D1%8F%20underlay%20%D1%81%D0%B5%D1%82%D0%B8%20CLOS.PNG)
 
 #### Описание сети
 
 При посторение сети выбрана следующая топология  разбиения на зоны и уровни  L2/L1 протокола ISIS. Сделано предположение, что маршрутизатор core1 является ядром сети.  Core1 обеспечивает  связность по уровню L2  для двух spine и, таким образом,  с двумя spine формируют backbone.  Маршрутизатор core1 выделен в отдельную зону area5, чтобы обеспечить формирование attached bit на маршрутизаторах L2/L1  в сторону маршурутизаторов L1 (areа1) и тем самым, обеспечить формирование маршрутиа по умолчанию на маршрутиазторах L1. Все spine  являются маршрутизаторами уровня L2\L1,
 
-тем самым обеспечивая связь по L1  со всеми  leaf.
+тем самым обеспечивая связь по L1  со всеми  leaf.  
 
+По моему наблюдению на  NX-OS  ( в отличии от IOS) маршруты L1 по умолчанию не  передаются в уровень L2  на маршрутизаторах L2L1, в лабораторной работе это сделано явно командой:
 
+   address-family ipv4 unicast
+    distribute level-1 into level-2 all
 
+Работо способность сети проверена .
+
+<pre><code>
+
+Таблица маршрутитизации isis на сore1
+core1#sh ip route isis 
+Codes: L - local, C - connected, S - static, R - RIP, M - mobile, B - BGP
+       D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area 
+       N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
+       E1 - OSPF external type 1, E2 - OSPF external type 2
+       i - IS-IS, su - IS-IS summary, L1 - IS-IS level-1, L2 - IS-IS level-2
+       ia - IS-IS inter area, * - candidate default, U - per-user static route
+       o - ODR, P - periodic downloaded static route, H - NHRP, l - LISP
+       a - application route
+       + - replicated route, % - next hop override
+
+Gateway of last resort is not set
+
+      10.0.0.0/8 is variably subnetted, 15 subnets, 2 masks
+i L2     10.77.1.0/30 [115/50] via 10.77.1.13, 00:17:13, Ethernet0/0
+i L2     10.77.1.4/30 [115/50] via 10.77.1.13, 00:17:13, Ethernet0/0
+i L2     10.77.1.8/30 [115/50] via 10.77.1.13, 00:17:13, Ethernet0/0
+i L2     10.77.2.0/30 [115/50] via 10.77.2.13, 00:57:05, Ethernet0/1
+i L2     10.77.2.4/30 [115/50] via 10.77.2.13, 00:53:55, Ethernet0/1
+i L2     10.77.2.8/30 [115/50] via 10.77.2.13, 00:53:35, Ethernet0/1
+i L2     10.77.255.1/32 [115/11] via 10.77.1.13, 00:17:13, Ethernet0/0
+i L2     10.77.255.2/32 [115/11] via 10.77.2.13, 00:57:05, Ethernet0/1
+i L2     10.77.255.4/32 [115/51] via 10.77.2.13, 00:17:13, Ethernet0/1
+                        [115/51] via 10.77.1.13, 00:17:13, Ethernet0/0
+i L2     10.77.255.7/32 [115/51] via 10.77.2.13, 00:17:07, Ethernet0/1
+                        [115/51] via 10.77.1.13, 00:17:07, Ethernet0/0
+
+</code></pre>
 
 
 #### Адресное пространство
@@ -102,17 +138,13 @@
 
 ##### Конфигурация оборудования :
 
-[a-nxos-sp1](https://github.com/dmn111/otus1/blob/master/a-nxos-sp1.conf.md)
+[a-nxos-sp1](https://github.com/dmn111/otus1/blob/master/underlay%20isis/b-nxos-sp1.conf.md)
 
-[a-nxos-sp2](https://github.com/dmn111/otus1/blob/master/a-nxos-sp2.conf.md)
+[a-nxos-sp2](https://github.com/dmn111/otus1/blob/master/underlay%20isis/a-nxos-sp2.conf.md)
 
-[a-nxos-lf3](https://github.com/dmn111/otus1/blob/master/a-nxos-lf3.conf.md)
+[a-nxos-lf3](https://github.com/dmn111/otus1/blob/master/underlay%20isis/a-nxos-lf3.conf.md)
 
-[a-nxos-lf4](https://github.com/dmn111/otus1/blob/master/a-nxos-lf4.conf.md)
+[a-nxos-lf4](https://github.com/dmn111/otus1/blob/master/underlay%20isis/a-nxos-lf4.conf.md)
 
-[a-nxos-lf7](https://github.com/dmn111/otus1/blob/master/a-nxos-lf7.conf.md)
-
-[b-nxos-sp1](https://github.com/dmn111/otus1/blob/master/b-nxos-sp1.conf.md)
-
-[b-nxos-lf1](https://github.com/dmn111/otus1/blob/master/b-nxos-lf1.conf.md)
+[a-nxos-lf7](https://github.com/dmn111/otus1/blob/master/underlay%20isis/a-nxos-lf7.conf.md)
 
