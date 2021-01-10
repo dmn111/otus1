@@ -7,7 +7,7 @@ service timestamps debug datetime msec
 service timestamps log datetime msec
 no service password-encryption
 !
-hostname core1
+hostname a-core1
 !
 boot-start-marker
 boot-end-marker
