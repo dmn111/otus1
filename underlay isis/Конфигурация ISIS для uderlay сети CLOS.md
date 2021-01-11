@@ -10,7 +10,7 @@
 
 При построении сети выбрана следующая топология  разбиения на зоны и уровни  L2-L1 протокола ISIS. Сделано предположение, что маршрутизатор  a-core1 является ядром сети.  A-core1 обеспечивает  связность по уровню L2  для двух spine и, таким образом,  с двумя spine формирует backbone.  Маршрутизатор a-core1 выделен в отдельную зону area5, чтобы обеспечить формирование attached bit на маршрутизаторах L2/L1  в сторону маршурутизаторов L1 (areа1) и тем самым, обеспечить формирование маршрутиа по умолчанию на маршрутиазторах L1. Все spine  являются маршрутизаторами уровня L2/L1, таким образом обеспечивают связь по L1 со всеми  leaf и по L2 cо всеми spine (через a-core1).
 
-По моему наблюдению на  NX-OS  ( в отличии от IOS) маршруты L1 по умолчанию не  передаются в уровень L2  на маршрутизаторах L2-L1, в лабораторной работе это сделано  командой явно:
+По моему наблюдению на  NX-OS  ( в отличии от IOS) маршруты L1 по умолчанию не  передаются в базу L2  на маршрутизаторах L2-L1, в лабораторной работе это сделано  командой явно:
 
    address-family ipv4 unicast
 
@@ -18,39 +18,79 @@
 
 Работоспособность сети проверена .
 
-<pre><code>
-Таблица маршрутитизации isis на сore1
-a-core1#sh ip route isis 
-Codes: L - local, C - connected, S - static, R - RIP, M - mobile, B - BGP
-       D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area 
-       N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
-       E1 - OSPF external type 1, E2 - OSPF external type 2
-       i - IS-IS, su - IS-IS summary, L1 - IS-IS level-1, L2 - IS-IS level-2
-       ia - IS-IS inter area, * - candidate default, U - per-user static route
-       o - ODR, P - periodic downloaded static route, H - NHRP, l - LISP
-       a - application route
 
-       + - replicated route, % - next hop override
+Таблица маршрутизации isis на сore1.  Доступны  оба leaf за счет дистрибьюции маршрутов L1 в базу L2 ( на spine)
 
+a-core1#sh ip route isis
+...
 Gateway of last resort is not set
 
       10.0.0.0/8 is variably subnetted, 15 subnets, 2 masks
-i L2     10.77.1.0/30 [115/50] via 10.77.1.13, 00:17:13, Ethernet0/0
-i L2     10.77.1.4/30 [115/50] via 10.77.1.13, 00:17:13, Ethernet0/0
-i L2     10.77.1.8/30 [115/50] via 10.77.1.13, 00:17:13, Ethernet0/0
-i L2     10.77.2.0/30 [115/50] via 10.77.2.13, 00:57:05, Ethernet0/1
-i L2     10.77.2.4/30 [115/50] via 10.77.2.13, 00:53:55, Ethernet0/1
-i L2     10.77.2.8/30 [115/50] via 10.77.2.13, 00:53:35, Ethernet0/1
-i L2     10.77.255.1/32 [115/11] via 10.77.1.13, 00:17:13, Ethernet0/0
-i L2     10.77.255.2/32 [115/11] via 10.77.2.13, 00:57:05, Ethernet0/1
-i L2     10.77.255.4/32 [115/51] via 10.77.2.13, 00:17:13, Ethernet0/1
-                        [115/51] via 10.77.1.13, 00:17:13, Ethernet0/0
-i L2     10.77.255.7/32 [115/51] via 10.77.2.13, 00:17:07, Ethernet0/1
-                        [115/51] via 10.77.1.13, 00:17:07, Ethernet0/0
+i L2     10.77.1.0/30 [115/50] via 10.77.1.13, 02:48:48, Ethernet0/0
+i L2     10.77.1.4/30 [115/50] via 10.77.1.13, 02:48:48, Ethernet0/0
+i L2     10.77.1.8/30 [115/50] via 10.77.1.13, 02:48:48, Ethernet0/0
+i L2     10.77.2.0/30 [115/50] via 10.77.2.13, 02:09:05, Ethernet0/1
+i L2     10.77.2.4/30 [115/50] via 10.77.2.13, 02:09:05, Ethernet0/1
+i L2     10.77.2.8/30 [115/50] via 10.77.2.13, 02:09:05, Ethernet0/1
+i L2     10.77.255.1/32 [115/11] via 10.77.1.13, 02:48:48, Ethernet0/0
+i L2     10.77.255.2/32 [115/11] via 10.77.2.13, 02:09:05, Ethernet0/1
+i L2     10.77.255.3/32 [115/51] via 10.77.2.13, 01:12:37, Ethernet0/1
+                        [115/51] via 10.77.1.13, 01:12:37, Ethernet0/0
+i L2     10.77.255.7/32 [115/51] via 10.77.2.13, 01:41:40, Ethernet0/1
+                        [115/51] via 10.77.1.13, 01:41:40, Ethernet0/0
 
 
+Таблица маршрутизации на  a-nxos-lf7.  Видим loopback  a-nxos-lf3  через оба spine
 
-</code></pre>
+a-nxos-lf7# sh ip route isis-1
+IP Route Table for VRF "default"
+'*' denotes best ucast next-hop
+'**' denotes best mcast next-hop
+'[x/y]' denotes [preference/metric]
+'%<string>' in via output denotes VRF <string>
+
+0.0.0.0/0, ubest/mbest: 2/0
+    *via 10.77.1.9, Eth1/4, [115/40], 01:42:48, isis-1, L1
+    *via 10.77.2.9, Eth1/5, [115/40], 01:42:46, isis-1, L1
+10.77.1.0/30, ubest/mbest: 1/0
+    *via 10.77.1.9, Eth1/4, [115/80], 01:42:48, isis-1, L1
+10.77.1.4/30, ubest/mbest: 1/0
+    *via 10.77.1.9, Eth1/4, [115/80], 01:42:48, isis-1, L1
+10.77.1.12/30, ubest/mbest: 1/0
+    *via 10.77.1.9, Eth1/4, [115/80], 01:42:48, isis-1, L1
+10.77.2.0/30, ubest/mbest: 1/0
+    *via 10.77.2.9, Eth1/5, [115/80], 01:42:46, isis-1, L1
+10.77.2.4/30, ubest/mbest: 1/0
+    *via 10.77.2.9, Eth1/5, [115/80], 01:42:46, isis-1, L1
+10.77.2.12/30, ubest/mbest: 1/0
+    *via 10.77.2.9, Eth1/5, [115/80], 01:42:46, isis-1, L1
+10.77.255.1/32, ubest/mbest: 1/0
+    *via 10.77.1.9, Eth1/4, [115/41], 01:42:48, isis-1, L1
+10.77.255.2/32, ubest/mbest: 1/0
+    *via 10.77.2.9, Eth1/5, [115/41], 01:42:46, isis-1, L1
+10.77.255.3/32, ubest/mbest: 2/0
+    *via 10.77.1.9, Eth1/4, [115/81], 01:13:53, isis-1, L1
+    *via 10.77.2.9, Eth1/5, [115/81], 01:13:45, isis-1, L1
+
+Сеседство по L2  и по L1 на spine 
+
+a-nxos-sp1# sh isis interface br
+IS-IS process: 1 VRF: default
+Interface    Type  Idx State        Circuit   MTU  Metric  Priority  Adjs/AdjsUp
+
+######                                                    L1  L2  L1  L2    L1    L2
+Topology: TopoID: 0
+loopback1    Loop  1     Up/Ready   0x01/L1-2 1500 1   1   64  64    0/0   0/0
+Topology: TopoID: 0
+Ethernet1/1  P2P   5     Up/Ready   0x01/L2   1500 40  40  64  64    0/0   1/1
+Topology: TopoID: 0
+Ethernet1/2  P2P   4     Up/Ready   0x01/L1   1500 40  40  64  64    1/1   0/0
+Topology: TopoID: 0
+Ethernet1/3  P2P   3     Up/Ready   0x01/L1   1500 40  40  64  64    0/0   0/0
+Topology: TopoID: 0
+Ethernet1/4  P2P   2     Up/Ready   0x01/L1   1500 40  40  64  64    1/1   0/0
+
+
 
 
 #### Адресное пространство
