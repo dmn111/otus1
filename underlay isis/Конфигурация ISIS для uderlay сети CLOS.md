@@ -20,7 +20,7 @@
 
 
 Таблица маршрутизации isis на сore1.  Доступны  оба leaf за счет дистрибьюции маршрутов L1 в базу L2 ( на spine)
-
+<pre><code>
 a-core1#sh ip route isis
 ...
 Gateway of last resort is not set
@@ -42,6 +42,7 @@ i L2     10.77.255.7/32 [115/51] via 10.77.2.13, 01:41:40, Ethernet0/1
 
 Таблица маршрутизации на  a-nxos-lf7.  Видим loopback  a-nxos-lf3  через оба spine
 
+<pre><code>
 a-nxos-lf7# sh ip route isis-1
 IP Route Table for VRF "default"
 '*' denotes best ucast next-hop
@@ -72,8 +73,11 @@ IP Route Table for VRF "default"
     *via 10.77.1.9, Eth1/4, [115/81], 01:13:53, isis-1, L1
     *via 10.77.2.9, Eth1/5, [115/81], 01:13:45, isis-1, L1
 
-Сеседство по L2  и по L1 на spine 
+</code></pre>
 
+Сеседство по L2  и по L1 на spine
+
+<pre><code>
 a-nxos-sp1# sh isis interface br
 IS-IS process: 1 VRF: default
 Interface    Type  Idx State        Circuit   MTU  Metric  Priority  Adjs/AdjsUp
@@ -90,6 +94,7 @@ Ethernet1/3  P2P   3     Up/Ready   0x01/L1   1500 40  40  64  64    0/0   0/0
 Topology: TopoID: 0
 Ethernet1/4  P2P   2     Up/Ready   0x01/L1   1500 40  40  64  64    1/1   0/0
 
+</code></pre>
 
 
 
