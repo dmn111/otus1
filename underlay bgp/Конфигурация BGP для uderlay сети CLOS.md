@@ -4,7 +4,7 @@
 
 #### Схема сети:
 
-![](https://github.com/dmn111/otus1/blob/master/underlay%20bgp/%D0%A1%D1%85%D0%B5%D0%BC%D0%B0%20ISIS%20%D0%B4%D0%BB%D1%8F%20underlay%20%D1%81%D0%B5%D1%82%D0%B8%20CLOS.PNG)
+![](https://github.com/dmn111/otus1/blob/master/underlay%20bgp/%D0%A1%D1%85%D0%B5%D0%BC%D0%B0%20BGP%20%D0%B4%D0%BB%D1%8F%20underlay%20%D1%81%D0%B5%D1%82%D0%B8%20CLOS.PNG)
 
 #### Описание сети
 
