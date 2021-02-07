@@ -10,10 +10,11 @@
 
 При построение underlay  сети  CLOS   на базе протокола bgp  за основу выбран следующий принцип разбиения на автономные системы. Все spine размещены в одной автономной системе as65000. Каждый leaf  размещен в отдельной автономной системе: as65003, as65004, as65007. Условный WAN маршурутизатор R15-WAN, анонсирующий дефолтный маршрут,  в отдельной AS65300. Таким образом,  все взаимодействи строится на основе eBGP , iBGP не используется.
 
-​	Для обеспечения ECMP в достижимости  между leaf,  сессии BGP между leaf и spine строятся от loopback интерфесов ( пареметр ebgp-multihop), дополнительно используется параметр maximum-paths, что позволяет добавлять в таблицу маршрутизации несколько равноценных маршрутов bgp  
+Для обеспечения ECMP в достижимости  между leaf,  сессии BGP между leaf и spine строятся от loopback интерфесов ( пареметр ebgp-multihop), дополнительно используется параметр maximum-paths, что позволяет добавлять в таблицу маршрутизации несколько равноценных маршрутов bgp  
 
 Пример:
 
+<pre><code>
 router bgp 65003
   router-id 10.77.255.3
   address-family ipv4 unicast
@@ -25,91 +26,55 @@ router bgp 65003
     ebgp-multihop 2
     timers 3 9
     address-family ipv4 unicast
+</code></pre>
 
 В результате построения сети проверена целевые показатели:
 
-Наличие  двух маршрутов в таблице маршрутизации до loopback интрерфейсов.
-
-
-
+Наличие  двух маршрутов в таблице маршрутизации до loopback интрерфейсов соседних leaf  и  default маршрута
 <pre><code>
-a-core1#sh ip route isis
-...
-Gateway of last resort is not set
-
-      10.0.0.0/8 is variably subnetted, 15 subnets, 2 masks
-i L2     10.77.1.0/30 [115/50] via 10.77.1.13, 02:48:48, Ethernet0/0
-i L2     10.77.1.4/30 [115/50] via 10.77.1.13, 02:48:48, Ethernet0/0
-i L2     10.77.1.8/30 [115/50] via 10.77.1.13, 02:48:48, Ethernet0/0
-i L2     10.77.2.0/30 [115/50] via 10.77.2.13, 02:09:05, Ethernet0/1
-i L2     10.77.2.4/30 [115/50] via 10.77.2.13, 02:09:05, Ethernet0/1
-i L2     10.77.2.8/30 [115/50] via 10.77.2.13, 02:09:05, Ethernet0/1
-i L2     10.77.255.1/32 [115/11] via 10.77.1.13, 02:48:48, Ethernet0/0
-i L2     10.77.255.2/32 [115/11] via 10.77.2.13, 02:09:05, Ethernet0/1
-i L2     10.77.255.3/32 [115/51] via 10.77.2.13, 01:12:37, Ethernet0/1
-                        [115/51] via 10.77.1.13, 01:12:37, Ethernet0/0
-i L2     10.77.255.7/32 [115/51] via 10.77.2.13, 01:41:40, Ethernet0/1
-                        [115/51] via 10.77.1.13, 01:41:40, Ethernet0/0
-</code></pre>
-
-Включение multipath в  для bgp, символ "|"
-
-
-
-
-
-<pre><code>
-a-nxos-lf7# sh ip route isis-1
+a-nxos-lf3# sh ip ro
 IP Route Table for VRF "default"
 '*' denotes best ucast next-hop
 '**' denotes best mcast next-hop
 '[x/y]' denotes [preference/metric]
 '%<string>' in via output denotes VRF <string>
 0.0.0.0/0, ubest/mbest: 2/0
-    *via 10.77.1.9, Eth1/4, [115/40], 01:42:48, isis-1, L1
-    *via 10.77.2.9, Eth1/5, [115/40], 01:42:46, isis-1, L1
-10.77.1.0/30, ubest/mbest: 1/0
-    *via 10.77.1.9, Eth1/4, [115/80], 01:42:48, isis-1, L1
-10.77.1.4/30, ubest/mbest: 1/0
-    *via 10.77.1.9, Eth1/4, [115/80], 01:42:48, isis-1, L1
-10.77.1.12/30, ubest/mbest: 1/0
-    *via 10.77.1.9, Eth1/4, [115/80], 01:42:48, isis-1, L1
-10.77.2.0/30, ubest/mbest: 1/0
-    *via 10.77.2.9, Eth1/5, [115/80], 01:42:46, isis-1, L1
-10.77.2.4/30, ubest/mbest: 1/0
-    *via 10.77.2.9, Eth1/5, [115/80], 01:42:46, isis-1, L1
-10.77.2.12/30, ubest/mbest: 1/0
-    *via 10.77.2.9, Eth1/5, [115/80], 01:42:46, isis-1, L1
+    *via 10.77.255.1, [20/0], 00:31:59, bgp-65003, external, tag 65000
+    *via 10.77.255.2, [20/0], 00:32:12, bgp-65003, external, tag 65000
+10.77.1.0/30, ubest/mbest: 1/0, attached
+    *via 10.77.1.2, Eth1/2, [0/0], 04:55:04, direct
+10.77.1.2/32, ubest/mbest: 1/0, attached
+    *via 10.77.1.2, Eth1/2, [0/0], 04:55:04, local
+10.77.2.4/30, ubest/mbest: 1/0, attached
+    *via 10.77.2.6, Eth1/3, [0/0], 04:55:04, direct
+10.77.2.6/32, ubest/mbest: 1/0, attached
+    *via 10.77.2.6, Eth1/3, [0/0], 04:55:04, local
 10.77.255.1/32, ubest/mbest: 1/0
-    *via 10.77.1.9, Eth1/4, [115/41], 01:42:48, isis-1, L1
+    *via 10.77.1.1, [1/0], 04:39:01, static
 10.77.255.2/32, ubest/mbest: 1/0
-    *via 10.77.2.9, Eth1/5, [115/41], 01:42:46, isis-1, L1
-10.77.255.3/32, ubest/mbest: 2/0
-    *via 10.77.1.9, Eth1/4, [115/81], 01:13:53, isis-1, L1
-    *via 10.77.2.9, Eth1/5, [115/81], 01:13:45, isis-1, L1
-
+    *via 10.77.2.5, [1/0], 02:03:20, static
+10.77.255.3/32, ubest/mbest: 2/0, attached
+    *via 10.77.255.3, Lo1, [0/0], 04:56:39, local
+    *via 10.77.255.3, Lo1, [0/0], 04:56:39, direct
+10.77.255.7/32, ubest/mbest: 2/0
+    *via 10.77.255.1, [20/0], 01:06:20, bgp-65003, external, tag 65000
+    *via 10.77.255.2, [20/0], 01:06:20, bgp-65003, external, tag 65000
+10.77.255.15/32, ubest/mbest: 2/0
+    *via 10.77.255.1, [20/0], 00:58:46, bgp-65003, external, tag 65000
+    *via 10.77.255.2, [20/0], 00:46:38, bgp-65003, external, tag 65000
 </code></pre>
-
-распространение default маршрута по сети 
-
+Включение multipath в  для bgp ( символ "|")
 <pre><code>
-a-nxos-sp1# sh isis interface br
-IS-IS process: 1 VRF: default
-Interface    Type  Idx State        Circuit   MTU  Metric  Priority  Adjs/AdjsUp
-
-######                                                    L1  L2  L1  L2    L1    L2
-Topology: TopoID: 0
-loopback1    Loop  1     Up/Ready   0x01/L1-2 1500 1   1   64  64    0/0   0/0
-Topology: TopoID: 0
-Ethernet1/1  P2P   5     Up/Ready   0x01/L2   1500 40  40  64  64    0/0   1/1
-Topology: TopoID: 0
-Ethernet1/2  P2P   4     Up/Ready   0x01/L1   1500 40  40  64  64    1/1   0/0
-Topology: TopoID: 0
-Ethernet1/3  P2P   3     Up/Ready   0x01/L1   1500 40  40  64  64    0/0   0/0
-Topology: TopoID: 0
-Ethernet1/4  P2P   2     Up/Ready   0x01/L1   1500 40  40  64  64    1/1   0/0
-
+   Network            Next Hop            Metric     LocPrf     Weight Path
+*|e0.0.0.0/0          10.77.255.1                                    0 65000 65300 i
+*>e                   10.77.255.2                                    0 65000 65300 i
+*>l10.77.255.3/32     0.0.0.0                           100      32768 i
+*|e10.77.255.7/32     10.77.255.2                                    0 65000 65007 i
+*>e                   10.77.255.1                                    0 65000 65007 i
+*|e10.77.255.15/32    10.77.255.2                                    0 65000 65300 i
+*>e                   10.77.255.1                                    0 65000 65300 i
 </code></pre>
+
 
 
 
