@@ -8,7 +8,7 @@
 
 #### Описание сети
 
-При построение underlay  сети  CLOS   на базе протокола bgp  за основу выбран следующий принцип разбиения на автономные системы. Все spine размещены в одной автономной системе as65000. Каждый leaf  размещен в отдельной автономной системе: as65003, as65004, as65007. Условный WAN маршурутизатор R15-WAN, анонсирующий дефолтный маршрут,  в отдельной AS65300. Таким образом,  все взаимодействи строится на основе eBGP , iBGP не используется.
+При построении underlay  сети  CLOS   на базе протокола bgp  за основу выбран следующий принцип разбиения на автономные системы. Все spine размещены в одной автономной системе as65000. Каждый leaf  размещен в отдельной автономной системе: as65003, as65004, as65007. Условный WAN маршрутизатор R15-WAN, анонсирующий дефолтный маршрут,  в отдельной AS65300. Таким образом,  все взаимодействие строится на основе eBGP, iBGP не используется.
 
 Для обеспечения ECMP в достижимости  между leaf,  сессии BGP между leaf и spine строятся от loopback интерфесов ( пареметр ebgp-multihop), дополнительно используется параметр maximum-paths, что позволяет добавлять в таблицу маршрутизации несколько равноценных маршрутов bgp  
 
@@ -30,7 +30,7 @@ router bgp 65003
 
 В результате построения сети проверена целевые показатели:
 
-Наличие  двух маршрутов в таблице маршрутизации до loopback интрерфейсов соседних leaf  и  default маршрута
+- наличие  двух маршрутов в таблице маршрутизации до loopback интрерфейсов соседних leaf  и  default маршрута
 <pre><code>
 a-nxos-lf3# sh ip ro
 IP Route Table for VRF "default"
@@ -63,7 +63,8 @@ IP Route Table for VRF "default"
     *via 10.77.255.1, [20/0], 00:58:46, bgp-65003, external, tag 65000
     *via 10.77.255.2, [20/0], 00:46:38, bgp-65003, external, tag 65000
 </code></pre>
-Включение multipath в  для bgp ( символ "|")
+
+- включение multipath в  для bgp ( символ "|")
 <pre><code>
    Network            Next Hop            Metric     LocPrf     Weight Path
 *|e0.0.0.0/0          10.77.255.1                                    0 65000 65300 i
@@ -75,8 +76,20 @@ IP Route Table for VRF "default"
 *>e                   10.77.255.1                                    0 65000 65300 i
 </code></pre>
 
+- bgp соседство
+<pre><code>
+a-nxos-lf3# sh ip bgp sum
+BGP summary information for VRF default, address family IPv4 Unicast
+BGP router identifier 10.77.255.3, local AS number 65003
+BGP table version is 15, IPv4 Unicast config peers 2, capable peers 2
+4 network entries and 7 paths using 1252 bytes of memory
+BGP attribute entries [3/492], BGP AS path entries [2/20]
+BGP community entries [0/0], BGP clusterlist entries [0/0]
 
-
+Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+10.77.255.1     4 65000    5287    5282       15    0    0 04:25:01 3         
+10.77.255.2     4 65000    2465    2460       15    0    0 02:03:13 3         
+</code></pre>
 
 #### Адресное пространство
 
