@@ -187,4 +187,4 @@ Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
 
 [a-nxos-lf7](https://github.com/dmn111/otus1/blob/master/underlay%20bgp/a-nxos-lf7.conf.md)
 
-[a-core1](https://github.com/dmn111/otus1/blob/master/underlay%20bgp/a-core1.conf.md)
+[wan-r15](https://github.com/dmn111/otus1/blob/master/underlay%20bgp/wan-r15.conf.md)
