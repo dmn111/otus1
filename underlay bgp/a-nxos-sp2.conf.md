@@ -1,7 +1,8 @@
 <pre><code>
 
-!Running configuration last done at: Sat Jan  9 18:57:54 2021
-!Time: Sat Jan  9 19:00:48 2021
+!Command: show running-config
+!Running configuration last done at: Sat Feb  6 16:34:39 2021
+!Time: Sat Feb  6 16:36:06 2021
 
 version 9.2(2) Bios:version  
 hostname a-nxos-sp2
@@ -15,7 +16,7 @@ vdc a-nxos-sp2 id 1
   limit-resource m6route-mem minimum 8 maximum 8
 
 feature ospf
-feature isis
+feature bgp
 feature bfd
 
 no password strength-check
@@ -29,35 +30,30 @@ rmon event 3 description ERROR(3) owner PMON@ERROR
 rmon event 4 description WARNING(4) owner PMON@WARNING
 rmon event 5 description INFORMATION(5) owner PMON@INFO
 
+ip route 10.77.255.3/32 10.77.2.6
+ip route 10.77.255.4/32 10.77.2.6
+ip route 10.77.255.7/32 10.77.2.10
 vlan 1
 
 vrf context management
 
 interface Ethernet1/1
   no switchport
+  speed 100
   no ip redirects
   ip address 10.77.2.13/30
-  isis network point-to-point
-  isis circuit-type level-2
-  ip router isis 1
   no shutdown
 
 interface Ethernet1/2
   no switchport
   no ip redirects
   ip address 10.77.2.1/30
-  isis network point-to-point
-  isis circuit-type level-1
-  ip router isis 1
   no shutdown
 
 interface Ethernet1/3
   no switchport
   no ip redirects
   ip address 10.77.2.5/30
-  isis network point-to-point
-  isis circuit-type level-1
-  ip router isis 1
   no shutdown
 
 interface Ethernet1/4
@@ -66,9 +62,6 @@ interface Ethernet1/5
   no switchport
   no ip redirects
   ip address 10.77.2.9/30
-  isis network point-to-point
-  isis circuit-type level-1
-  ip router isis 1
   no shutdown
 
 interface Ethernet1/6
@@ -325,11 +318,29 @@ interface loopback1
 line console
 line vty
 boot nxos bootflash:/nxos.9.2.2.bin 
-router isis 1
-  net 49.0001.0000.0001.0002.00
-  address-family ipv4 unicast
-    distribute level-1 into level-2 all
-    advertise interface loopback1
+router bgp 65000
+  router-id 10.77.255.2
+  template peer tmpLeaf
+    update-source loopback1
+    ebgp-multihop 2
+    timers 3 9
+    address-family ipv4 unicast
+  neighbor 10.77.2.14
+    remote-as 65300
+    timers 3 9
+    address-family ipv4 unicast
+  neighbor 10.77.255.3
+    inherit peer tmpLeaf
+    remote-as 65003
+    description LEAF-3
+  neighbor 10.77.255.4
+    inherit peer tmpLeaf
+    remote-as 65004
+    description LEAF-4
+  neighbor 10.77.255.7
+    inherit peer tmpLeaf
+    remote-as 65007
+    description LEAF-7
 
 
 </code></pre>

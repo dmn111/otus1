@@ -1,13 +1,13 @@
 <pre><code>
 !
-! Last configuration change at 21:49:44 EET Sat Jan 9 2021
+! Last configuration change at 19:16:32 EET Sat Feb 6 2021
 !
 version 15.4
 service timestamps debug datetime msec
 service timestamps log datetime msec
 no service password-encryption
 !
-hostname a-core1
+hostname R15-WAN
 !
 boot-start-marker
 boot-end-marker
@@ -67,17 +67,15 @@ redundancy
 !
 interface Loopback1
  ip address 10.77.255.15 255.255.255.255
- ip router isis 1
+!
+interface Loopback2
+ ip address 10.66.255.15 255.255.255.255
 !
 interface Ethernet0/0
  ip address 10.77.1.14 255.255.255.252
- ip router isis 1
- isis network point-to-point 
 !
 interface Ethernet0/1
  ip address 10.77.2.14 255.255.255.252
- ip router isis 1
- isis network point-to-point 
 !
 interface Ethernet0/2
  no ip address
@@ -85,17 +83,32 @@ interface Ethernet0/2
 !
 interface Ethernet0/3
  no ip address
+ shutdown
 !
-router isis 1
- net 49.0005.0000.0000.0001.00
- is-type level-2-only
- metric-style wide
+router bgp 65300
+ bgp log-neighbor-changes
+ neighbor 10.77.1.13 remote-as 65000
+ neighbor 10.77.1.13 timers 3 9
+ neighbor 10.77.2.13 remote-as 65000
+ neighbor 10.77.2.13 timers 3 9
+ !
+ address-family ipv4
+  network 10.77.255.15 mask 255.255.255.255
+  neighbor 10.77.1.13 activate
+  neighbor 10.77.1.13 default-originate
+  neighbor 10.77.1.13 advertisement-interval 0
+  neighbor 10.77.2.13 activate
+  neighbor 10.77.2.13 default-originate
+  neighbor 10.77.2.13 advertisement-interval 0
+  maximum-paths 5
+ exit-address-family
 !
 ip forward-protocol nd
 !
 !
 no ip http server
 no ip http secure-server
+ip route 0.0.0.0 0.0.0.0 Null0
 !
 !
 !
@@ -118,5 +131,7 @@ line vty 0 4
 !
 !
 end
+
+
 </code></pre>
 

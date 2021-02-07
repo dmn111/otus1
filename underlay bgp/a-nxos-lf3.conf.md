@@ -1,8 +1,8 @@
 <pre><code>
 
 !Command: show running-config
-!Running configuration last done at: Sat Jan  9 20:04:41 2021
-!Time: Sat Jan  9 20:24:07 2021
+!Running configuration last done at: Sat Feb  6 15:11:55 2021
+!Time: Sat Feb  6 16:18:20 2021
 
 version 9.2(2) Bios:version  
 hostname a-nxos-lf3
@@ -16,7 +16,7 @@ vdc a-nxos-lf3 id 1
   limit-resource m6route-mem minimum 8 maximum 8
 
 feature ospf
-feature isis
+feature bgp
 feature bfd
 
 no password strength-check
@@ -30,7 +30,8 @@ rmon event 3 description ERROR(3) owner PMON@ERROR
 rmon event 4 description WARNING(4) owner PMON@WARNING
 rmon event 5 description INFORMATION(5) owner PMON@INFO
 
-ip igmp any-query-destination
+ip route 10.77.255.1/32 10.77.1.1
+ip route 10.77.255.2/32 10.77.2.5
 vlan 1
 
 vrf context management
@@ -41,18 +42,12 @@ interface Ethernet1/2
   no switchport
   no ip redirects
   ip address 10.77.1.2/30
-  isis network point-to-point
-  isis circuit-type level-1
-  ip router isis 1
   no shutdown
 
 interface Ethernet1/3
   no switchport
   no ip redirects
   ip address 10.77.2.6/30
-  isis network point-to-point
-  isis circuit-type level-1
-  ip router isis 1
   no shutdown
 
 interface Ethernet1/4
@@ -313,12 +308,22 @@ interface loopback1
 line console
 line vty
 boot nxos bootflash:/nxos.9.2.2.bin 
-router isis 1
-  net 49.0001.0000.0002.0003.00
-  is-type level-1
+router bgp 65003
+  router-id 10.77.255.3
   address-family ipv4 unicast
-    advertise interface loopback1
-
-
+    network 10.77.255.3/32
+    maximum-paths 5
+  neighbor 10.77.255.1
+    remote-as 65000
+    update-source loopback1
+    ebgp-multihop 2
+    timers 3 9
+    address-family ipv4 unicast
+  neighbor 10.77.255.2
+    remote-as 65000
+    update-source loopback1
+    ebgp-multihop 2
+    timers 3 9
+    address-family ipv4 unicast
 
 </code></pre>
