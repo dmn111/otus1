@@ -1,9 +1,4 @@
 <pre><code>
-
-!Command: show running-config
-!Running configuration last done at: Sun Feb  7 10:09:38 2021
-!Time: Sun Feb  7 10:10:49 2021
-
 version 9.2(2) Bios:version  
 hostname a-nxos-lf4
 vdc a-nxos-lf4 id 1
@@ -30,6 +25,8 @@ rmon event 3 description ERROR(3) owner PMON@ERROR
 rmon event 4 description WARNING(4) owner PMON@WARNING
 rmon event 5 description INFORMATION(5) owner PMON@INFO
 
+ip route 10.77.255.1/32 10.77.1.5
+ip route 10.77.255.2/32 10.77.2.1
 vlan 1
 
 vrf context management
@@ -235,7 +232,7 @@ interface Ethernet1/95
 interface Ethernet1/96
 
 interface Ethernet1/97
- 
+
 interface Ethernet1/98
 
 interface Ethernet1/99
@@ -307,7 +304,6 @@ line console
 line vty
 boot nxos bootflash:/nxos.9.2.2.bin 
 router bgp 65004
-  router-id 10.77.255.4
   address-family ipv4 unicast
     network 10.77.255.4/32
     maximum-paths 5
@@ -322,5 +318,5 @@ router bgp 65004
     update-source loopback1
     ebgp-multihop 2
     timers 3 9
-
+    address-family ipv4 unicast
 </code></pre>

@@ -1,8 +1,7 @@
 <pre><code>
-
 !Command: show running-config
-!Running configuration last done at: Sat Feb  6 16:34:39 2021
-!Time: Sat Feb  6 16:36:06 2021
+!Running configuration last done at: Sun Feb  7 14:42:15 2021
+!Time: Sun Feb  7 14:46:39 2021
 
 version 9.2(2) Bios:version  
 hostname a-nxos-sp2
@@ -31,7 +30,7 @@ rmon event 4 description WARNING(4) owner PMON@WARNING
 rmon event 5 description INFORMATION(5) owner PMON@INFO
 
 ip route 10.77.255.3/32 10.77.2.6
-ip route 10.77.255.4/32 10.77.2.6
+ip route 10.77.255.4/32 10.77.2.2
 ip route 10.77.255.7/32 10.77.2.10
 vlan 1
 
@@ -341,6 +340,4 @@ router bgp 65000
     inherit peer tmpLeaf
     remote-as 65007
     description LEAF-7
-
-
 </code></pre>
