@@ -3,11 +3,11 @@
 
 #### Схема сети:
 
-![](https://github.com/dmn111/otus1/blob/master/underlay%20bgp/%D0%A1%D1%85%D0%B5%D0%BC%D0%B0%20CLOS%20%D0%BD%D0%B0%20%D0%BE%D1%81%D0%BD%D0%BE%D0%B2%D0%B5%20%D0%BF%D1%80%D1%82%D0%BE%D0%BA%D0%BE%D0%BB%D0%B0%20BGP%20%D0%B2%20underlay%20%D1%81%D0%B5%D1%82%D0%B8.PNG)
+![](https://github.com/dmn111/otus1/blob/master/multicast/%D0%A1%D1%85%D0%B5%D0%BC%D0%B0%20%D1%81%D0%B5%D1%82%D0%B8%20%D0%BD%D0%B0%20%D0%BE%D1%81%D0%BD%D0%BE%D0%B2%D0%B5%20%D0%BF%D1%80%D0%BE%D1%82%D0%BE%D0%BA%D0%BE%D0%BB%D0%B0%20PIM%20sparse%20mode.png)
 
 #### Описание сети
 
-​	Для изучения работы протокола PIM в режиме sparse mode  была выбрана конфигурация сети приведенная на схеме. В качестве маршрутиазтора RP выбран  a-nxos-sp1,  маршрутизатор FHR  - a-nxos-lf4,  маршрутизатор LHR - a-nxos-lf7, в качестве потребителя мультикаста маршрутиазтор pc-01 с подпиской на мультикаст группу 239.5.5.5,  в качестве источника мулитикаст трафика  маршрутизатор srv-01. Выбор a-nxos-sp1 в качестве RP позволяет моделировать  преключение трафика при  spt switchover. Проанализированы два состояния a-nxos-sp2 выключен и включен.
+​	Для изучения работы протокола PIM в режиме sparse mode была выбрана конфигурация сети приведенная на схеме. В качестве маршрутиазтора RP выбран  a-nxos-sp1,  маршрутизатор FHR  - a-nxos-lf4,  маршрутизатор LHR - a-nxos-lf7, в качестве потребителя мультикаст трафика маршрутиазтор pc-01 с подпиской на мультикаст группу 239.5.5.5,  в качестве источника мулитикаста маршрутизатор srv-01. Выбор a-nxos-sp1 в качестве RP позволяет моделировать переключение трафика при  spt switchover. Проанализированы два состояния сети, маршрутизатор a-nxos-sp2 выключен и включен.
 
 ​	В результате включения потребителя  и  источника мультикаст трафика видим построение shared tree через RP
 
@@ -55,7 +55,7 @@ IP Multicast Routing Table for VRF "default"
     Ethernet1/3, uptime: 00:20:13, pim
 </code></pre>
 
-При включении маршрутизатора a-nxos-sp2, наблюдаем spt switchover, трафик от источника идет не через RP (a-nxos-sp1), а через a-nxos-sp2
+При включении маршрутизатора a-nxos-sp2,  трафик от источника идет не через RP (a-nxos-sp1), а через a-nxos-sp2
 
 <pre><code>
 a-nxos-lf7# sh ip mroute
@@ -72,6 +72,8 @@ IP Multicast Routing Table for VRF "default"
   Outgoing interface list: (count: 1)
     Ethernet1/2, uptime: 00:05:02, mrib
 </code></pre>
+
+На  a-nxos-sp1  OIL пустой
 
 <pre><code>
 a-nxos-sp1# sh ip mroute
