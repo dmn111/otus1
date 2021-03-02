@@ -4,7 +4,7 @@
 
 #### Схема сети:
 
-![](https://github.com/dmn111/otus1/blob/master/underlay%20bgp/%D0%A1%D1%85%D0%B5%D0%BC%D0%B0%20CLOS%20%D0%BD%D0%B0%20%D0%BE%D1%81%D0%BD%D0%BE%D0%B2%D0%B5%20%D0%BF%D1%80%D1%82%D0%BE%D0%BA%D0%BE%D0%BB%D0%B0%20BGP%20%D0%B2%20underlay%20%D1%81%D0%B5%D1%82%D0%B8.PNG)
+![](https://github.com/dmn111/otus1/blob/master/vxlan%20evpn%20type-2/vxlan%20evpn%20type-2.PNG)
 
 #### Описание сети
 
@@ -313,16 +313,16 @@ nve1      10010    UnicastBGP        Up    CP   L2 [10]            SA
 
 ##### Конфигурация оборудования :
 
-[a-nxos-sp1](https://github.com/dmn111/otus1/blob/master/underlay%20bgp/a-nxos-sp1.conf.md)
+[a-nxos-sp1](https://github.com/dmn111/otus1/blob/master/vxlan%20evpn%20type-2/a-nxos-sp1.conf.md)
 
-[a-nxos-sp2](https://github.com/dmn111/otus1/blob/master/underlay%20bgp/a-nxos-sp2.conf.md)
+[a-nxos-sp2](https://github.com/dmn111/otus1/blob/master/vxlan%20evpn%20type-2/a-nxos-sp2.conf.md)
 
-[a-nxos-lf3](https://github.com/dmn111/otus1/blob/master/underlay%20bgp/a-nxos-lf3.conf.md)
+[a-nxos-lf3](https://github.com/dmn111/otus1/blob/master/vxlan%20evpn%20type-2/a-nxos-lf3.conf.md)
 
-[a-nxos-lf4](https://github.com/dmn111/otus1/blob/master/underlay%20bgp/a-nxos-lf4.conf.md)
+[a-nxos-lf4](https://github.com/dmn111/otus1/blob/master/vxlan%20evpn%20type-2/a-nxos-lf4.conf.md)
 
-[a-nxos-lf7](https://github.com/dmn111/otus1/blob/master/underlay%20bgp/a-nxos-lf7.conf.md)
+[a-nxos-lf7](https://github.com/dmn111/otus1/blob/master/vxlan%20evpn%20type-2/a-nxos-lf7.conf.md)
 
-[R10](https://github.com/dmn111/otus1/blob/master/underlay%20bgp/wan-r15.conf.md)
+[R10](https://github.com/dmn111/otus1/blob/master/vxlan%20evpn%20type-2/R10.conf.md)
 
-[SW10](https://github.com/dmn111/otus1/blob/master/underlay%20bgp/wan-r15.conf.md)
+[SW10](https://github.com/dmn111/otus1/blob/master/vxlan%20evpn%20type-2/SW10.conf.md)
