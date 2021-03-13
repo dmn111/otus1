@@ -1,8 +1,8 @@
 <pre><code>
 
 !Command: show running-config
-!Running configuration last done at: Mon Mar  1 17:17:40 2021
-!Time: Mon Mar  1 18:28:40 2021
+!Running configuration last done at: Fri Mar 12 19:48:01 2021
+!Time: Sat Mar 13 13:04:48 2021
 
 version 9.2(2) Bios:version  
 hostname a-nxos-lf4
@@ -38,11 +38,19 @@ rmon event 4 description WARNING(4) owner PMON@WARNING
 rmon event 5 description INFORMATION(5) owner PMON@INFO
 
 fabric forwarding anycast-gateway-mac 0000.0000.0010
-vlan 1,10
+vlan 1,10,999
 vlan 10
   vn-segment 10010
+vlan 999
+  vn-segment 10999
 
 vrf context management
+vrf context vrfABC
+  vni 10999
+  rd auto
+  address-family ipv4 unicast
+    route-target both auto
+    route-target both auto evpn
 vrf context vrfKEEP
 hardware access-list tcam region racl 0
 hardware access-list tcam region arp-ether 256 double-wide
@@ -58,10 +66,16 @@ interface Vlan1
 
 interface Vlan10
   no shutdown
+  vrf member vrfABC
   no ip redirects
   ip address 192.168.10.1/24
   no ipv6 redirects
   fabric forwarding mode anycast-gateway
+
+interface Vlan999
+  no shutdown
+  vrf member vrfABC
+  ip forward
 
 interface port-channel5
   switchport mode trunk
@@ -80,6 +94,7 @@ interface nve1
   member vni 10010
     suppress-arp
     ingress-replication protocol bgp
+  member vni 10999 associate-vrf
 
 interface Ethernet1/1
   switchport access vlan 10
@@ -399,5 +414,6 @@ evpn
     rd auto
     route-target import auto
     route-target export auto
+
 
 </code></pre>
