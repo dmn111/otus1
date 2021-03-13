@@ -275,7 +275,7 @@ Success rate is 100 percent (5/5), round-trip min/avg/max = 80/94/118 ms
 |              | e1/2        | 10.77.1.2/30           |
 |              | e1/3        | 10.77.2.6/30           |
 |              | e1/4        |                        |
-|              | int vlan 10 | 192.168.10.1/24 vrfABC |
+|              | int vlan 10 | 192.168.10.1/24 vrfABC overlay|
 |              |             |                        |
 |              |             |                        |
 
@@ -286,7 +286,7 @@ Success rate is 100 percent (5/5), round-trip min/avg/max = 80/94/118 ms
 |              | e1/2        | 10.77.2.2/30           |
 |              | e1/3        | 10.77.1.6/30           |
 |              | e1/4        |                        |
-|              | int vlan 10 | 192.168.10.1/24 vrfABC |
+|              | int vlan 10 | 192.168.10.1/24 vrfABC overlay |
 |              |             |                        |
 
 | Оборудование | Интерфейс   | Ip адрес               |
@@ -295,11 +295,10 @@ Success rate is 100 percent (5/5), round-trip min/avg/max = 80/94/118 ms
 |              | e1/1        |                        |
 |              | e1/4        | 10.77.1.10/30          |
 |              | e1/5        | 10.77.2.10/30          |
-|                                                     |
-|              | int vlan 20 | 192.168.20.1/24 vrfABC |
-|              | int vlan 30 | 192.168.30.1/24 vrfABC |
-|              | int vlan 50 | 192.168.50.1/24 vrfABC |
-|              | loopback90  | 192.168.90.1/24 vrfABC |
+|              | int vlan 20 | 192.168.20.1/24 vrfABC overlay|
+|              | int vlan 30 | 192.168.30.1/24 vrfABC overlay|
+|              | int vlan 50 | 192.168.50.1/24 vrfABC overlay|
+|              | loopback90  | 192.168.90.1/24 vrfABC overlay|
 
 #####   Граничные утройтсва подключенные к CLOS
 
