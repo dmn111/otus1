@@ -1,6 +1,6 @@
 <pre><code>
 !
-! Last configuration change at 22:42:37 EET Thu Mar 11 2021
+! Last configuration change at 09:55:32 EET Mon Mar 29 2021
 !
 version 15.2
 service timestamps debug datetime msec
@@ -8,7 +8,7 @@ service timestamps log datetime msec
 no service password-encryption
 service compress-config
 !
-hostname sw10
+hostname c-sw5
 !
 boot-start-marker
 boot-end-marker
@@ -25,12 +25,12 @@ clock timezone EET 2 0
 !
 !
 !
-no ip domain-lookup
 ip cef
 no ipv6 cef
 !
 !
-spanning-tree mode pvst
+!
+spanning-tree mode rapid-pvst
 spanning-tree extend system-id
 !
 vlan internal allocation policy ascending
@@ -47,34 +47,36 @@ vlan internal allocation policy ascending
 !
 !
 !
-interface Port-channel10
- switchport access vlan 10
- switchport mode access
+!
+interface Port-channel1
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+interface Port-channel5
 !
 interface Ethernet0/0
- switchport access vlan 10
- switchport mode access
- channel-group 10 mode active
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ channel-group 1 mode active
 !
 interface Ethernet0/1
- switchport access vlan 10
- switchport mode access
- channel-group 10 mode active
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ channel-group 1 mode active
 !
 interface Ethernet0/2
+ switchport access vlan 10
+ spanning-tree portfast edge
 !
 interface Ethernet0/3
-!
-interface Vlan10
- ip address 192.168.10.50 255.255.255.0
+ switchport access vlan 50
+ spanning-tree portfast edge
 !
 ip forward-protocol nd
 !
 no ip http server
 no ip http secure-server
 !
-ip route 10.0.0.0 255.0.0.0 192.168.10.1
-ip route 192.168.0.0 255.255.0.0 192.168.10.1
 !
 !
 !
@@ -91,6 +93,4 @@ line vty 0 4
 !
 !
 end
-
 </code></pre>
-

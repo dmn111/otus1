@@ -1,11 +1,12 @@
 <pre><code>
+
 !Command: show running-config
-!Running configuration last done at: Sun Feb 28 18:45:41 2021
-!Time: Mon Mar  1 17:32:45 2021
+!Running configuration last done at: Mon Mar 29 17:34:25 2021
+!Time: Mon Mar 29 21:11:47 2021
 
 version 9.2(2) Bios:version  
-hostname a-nxos-sp1
-vdc a-nxos-sp1 id 1
+hostname b-nxos-sp1
+vdc b-nxos-sp1 id 1
   limit-resource vlan minimum 16 maximum 4094
   limit-resource vrf minimum 2 maximum 4096
   limit-resource port-channel minimum 0 maximum 511
@@ -17,11 +18,11 @@ vdc a-nxos-sp1 id 1
 nv overlay evpn
 feature ospf
 feature bgp
-feature nv overlay
 
 no password strength-check
-username admin password 5 $5$h3YGHkM.$/bOUMJv7dJQHVGV1ibyTXc52oD3qy64HIeTie9QN/35  role network-admin
+username admin password 5 $5$0DC2NT8.$qmlYBb5XfCByLPa.tFnnmWN4XBGznsT3GfB.AqeU9m2  role network-admin
 ip domain-lookup
+copp profile strict
 snmp-server user admin network-admin auth md5 0x77f2063bdc1123059c9aa923936b8a24 priv 0x77f2063bdc1123059c9aa923936b8a24 localizedkey
 rmon event 1 description FATAL(1) owner PMON@FATAL
 rmon event 2 description CRITICAL(2) owner PMON@CRITICAL
@@ -31,24 +32,24 @@ rmon event 5 description INFORMATION(5) owner PMON@INFO
 
 vlan 1
 
+route-map rmNH-unchanged permit 10
+  set ip next-hop unchanged
 vrf context management
 
+
 interface Ethernet1/1
+  description DCI Link-1
   no switchport
-  speed 1000
-  duplex full
-  no ip redirects
-  ip address 10.77.1.13/30
+  ip address 10.1.1.2/30
   ip ospf network point-to-point
   no ip ospf passive-interface
   ip router ospf 1 area 0.0.0.0
   no shutdown
 
 interface Ethernet1/2
+  description DCI LinkToB
   no switchport
-  no ip redirects
-  ip address 10.77.1.1/30
-  no ipv6 redirects
+  ip address 10.1.2.1/30
   ip ospf network point-to-point
   no ip ospf passive-interface
   ip router ospf 1 area 0.0.0.0
@@ -56,25 +57,21 @@ interface Ethernet1/2
 
 interface Ethernet1/3
   no switchport
-  no ip redirects
-  ip address 10.77.1.5/30
-  no ipv6 redirects
+  ip address 10.66.1.1/30
   ip ospf network point-to-point
   no ip ospf passive-interface
   ip router ospf 1 area 0.0.0.0
   no shutdown
 
 interface Ethernet1/4
+
+interface Ethernet1/5
   no switchport
-  no ip redirects
-  ip address 10.77.1.9/30
-  no ipv6 redirects
+  ip address 10.1.1.14/30
   ip ospf network point-to-point
   no ip ospf passive-interface
   ip router ospf 1 area 0.0.0.0
   no shutdown
-
-interface Ethernet1/5
 
 interface Ethernet1/6
 
@@ -325,27 +322,51 @@ interface Ethernet1/128
 interface mgmt0
   vrf member management
 
-interface loopback1
-  ip address 10.77.255.1/32
+interface loopback0
+  ip address 10.66.255.1/32
   ip router ospf 1 area 0.0.0.0
 line console
 line vty
 boot nxos bootflash:/nxos.9.2.2.bin 
 router ospf 1
-  router-id 10.77.255.1
+  router-id 10.66.255.1
   passive-interface default
-router bgp 65000
+router bgp 65002
   template peer LEAF
-    remote-as 65000
-    update-source loopback1
+    remote-as 65002
+    update-source loopback0
     address-family l2vpn evpn
       send-community
       send-community extended
       route-reflector-client
-  neighbor 10.77.255.3
+  template peer SPINE65001
+    remote-as 65001
+    update-source loopback0
+    ebgp-multihop 10
+    address-family l2vpn evpn
+      send-community
+      send-community extended
+      route-map rmNH-unchanged out
+  template peer SPINE65003
+    remote-as 65003
+    update-source loopback0
+    ebgp-multihop 10
+    address-family l2vpn evpn
+      send-community
+      send-community extended
+      route-map rmNH-unchanged out
+  neighbor 10.55.255.1
+    inherit peer SPINE65003
+  neighbor 10.55.255.2
+    inherit peer SPINE65003
+  neighbor 10.66.255.3
     inherit peer LEAF
-  neighbor 10.77.255.4
+    no shutdown
+  neighbor 10.66.255.4
     inherit peer LEAF
-  neighbor 10.77.255.7
-    inherit peer LEAF
+  neighbor 10.77.255.1
+    inherit peer SPINE65001
+  neighbor 10.77.255.2
+    inherit peer SPINE65001
+
 </code></pre>

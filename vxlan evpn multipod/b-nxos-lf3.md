@@ -1,12 +1,12 @@
 <pre><code>
 
 !Command: show running-config
-!Running configuration last done at: Fri Mar 12 19:48:01 2021
-!Time: Sat Mar 13 13:04:48 2021
+!Running configuration last done at: Mon Mar 29 11:07:56 2021
+!Time: Mon Mar 29 21:10:58 2021
 
 version 9.2(2) Bios:version  
-hostname a-nxos-lf4
-vdc a-nxos-lf4 id 1
+hostname b-nxos-lf3
+vdc b-nxos-lf3 id 1
   limit-resource vlan minimum 16 maximum 4094
   limit-resource vrf minimum 2 maximum 4096
   limit-resource port-channel minimum 0 maximum 511
@@ -23,87 +23,87 @@ feature interface-vlan
 feature vn-segment-vlan-based
 feature lacp
 feature vpc
-feature bfd
 feature nv overlay
 
 no password strength-check
-username admin password 5 $5$dAKPeNGm$Pos90bF.sLAXvjhJJHzgsTT8Z/odzNjRJMcA3qtrzTB  role network-admin
+username admin password 5 $5$uoMl41d/$Gy9Ucnqr1Ia25UQOfhH4mYq4Md5BuAFADuMZC2OFHJ6  role network-admin
 ip domain-lookup
 copp profile strict
-snmp-server user admin network-admin auth md5 0xe9627cf0153d856df201d4bd6732b188 priv 0xe9627cf0153d856df201d4bd6732b188 localizedkey
+snmp-server user admin network-admin auth md5 0x35313b60d3525899118ddd7959df5c80 priv 0x35313b60d3525899118ddd7959df5c80 localizedkey
 rmon event 1 description FATAL(1) owner PMON@FATAL
 rmon event 2 description CRITICAL(2) owner PMON@CRITICAL
 rmon event 3 description ERROR(3) owner PMON@ERROR
 rmon event 4 description WARNING(4) owner PMON@WARNING
 rmon event 5 description INFORMATION(5) owner PMON@INFO
 
-fabric forwarding anycast-gateway-mac 0000.0000.0010
-vlan 1,10,999
-vlan 10
-  vn-segment 10010
+vlan 1,20,50,111,999
+vlan 20
+  vn-segment 10020
+vlan 50
+  vn-segment 10050
 vlan 999
   vn-segment 10999
 
+ip prefix-list prDmzNet seq 5 permit 10.90.50.0/24 
+route-map rmRedistOSPF permit 100
+  match ip address prefix-list prDmzNet 
 vrf context management
-vrf context vrfABC
+vrf context vrfDMZ
+vrf context vrfLAN
   vni 10999
   rd auto
   address-family ipv4 unicast
-    route-target both auto
-    route-target both auto evpn
-vrf context vrfKEEP
-hardware access-list tcam region racl 0
-hardware access-list tcam region arp-ether 256 double-wide
-vpc domain 1
-  peer-switch
-  peer-keepalive destination 172.31.255.3 source 172.31.255.4 vrf vrfKEEP
-  peer-gateway
+    route-target import 9999:10999
+    route-target import 9999:10999 evpn
+    route-target export 9999:10999
+    route-target export 9999:10999 evpn
 
 
 interface Vlan1
-  no ip redirects
-  no ipv6 redirects
 
-interface Vlan10
+interface Vlan20
+  vrf member vrfLAN
+
+interface Vlan50
+  vrf member vrfDMZ
+  ip address 10.90.50.254/24
+
+interface Vlan111
   no shutdown
-  vrf member vrfABC
-  no ip redirects
-  ip address 192.168.10.1/24
-  no ipv6 redirects
-  fabric forwarding mode anycast-gateway
+  vrf member vrfLAN
+  ip address 10.90.255.2/24
+  no ip ospf passive-interface
+  ip router ospf 5 area 0.0.0.0
 
 interface Vlan999
   no shutdown
-  vrf member vrfABC
+  vrf member vrfLAN
   ip forward
-
-interface port-channel5
-  switchport mode trunk
-  switchport trunk allowed vlan 1,10
-  spanning-tree port type network
-  vpc peer-link
-
-interface port-channel10
-  switchport access vlan 10
-  vpc 10
 
 interface nve1
   no shutdown
   host-reachability protocol bgp
-  source-interface loopback3
-  member vni 10010
-    suppress-arp
+  source-interface loopback1
+  member vni 10020
+    ingress-replication protocol bgp
+  member vni 10050
     ingress-replication protocol bgp
   member vni 10999 associate-vrf
 
 interface Ethernet1/1
-  switchport access vlan 10
-  channel-group 10 mode active
+  no switchport
+  no ip redirects
+  ip address 10.66.1.2/30
+  no ipv6 redirects
+  ip ospf network point-to-point
+  no ip ospf passive-interface
+  ip router ospf 1 area 0.0.0.0
+  no shutdown
 
 interface Ethernet1/2
   no switchport
   no ip redirects
-  ip address 10.77.2.2/30
+  ip address 10.66.2.6/30
   no ipv6 redirects
   ip ospf network point-to-point
   no ip ospf passive-interface
@@ -111,33 +111,16 @@ interface Ethernet1/2
   no shutdown
 
 interface Ethernet1/3
-  no switchport
-  no ip redirects
-  ip address 10.77.1.6/30
-  no ipv6 redirects
-  ip ospf network point-to-point
-  no ip ospf passive-interface
-  ip router ospf 1 area 0.0.0.0
-  no shutdown
+  switchport mode trunk
+  switchport trunk allowed vlan 50,111
 
 interface Ethernet1/4
-  no switchport
-  vrf member vrfKEEP
-  ip address 172.31.255.4/29
-  no shutdown
 
 interface Ethernet1/5
-  switchport mode trunk
-  switchport trunk allowed vlan 1,10
-  channel-group 5 mode active
 
 interface Ethernet1/6
-  switchport mode trunk
-  switchport trunk allowed vlan 1,10
-  channel-group 5 mode active
 
 interface Ethernet1/7
-  shutdown
 
 interface Ethernet1/8
 
@@ -384,36 +367,46 @@ interface Ethernet1/128
 interface mgmt0
   vrf member management
 
-interface loopback1
-  ip address 10.77.255.4/32
+interface loopback0
+  ip address 10.66.255.3/32
   ip router ospf 1 area 0.0.0.0
 
-interface loopback3
-  ip address 10.77.253.4/32
-  ip address 10.77.253.5/32 secondary
+interface loopback1
+  ip address 10.66.253.3/32
   ip router ospf 1 area 0.0.0.0
 line console
 line vty
 boot nxos bootflash:/nxos.9.2.2.bin 
 router ospf 1
-  router-id 10.77.255.4
+  router-id 10.66.255.3
   passive-interface default
-router bgp 65000
+router ospf 5
+  router-id 10.90.255.2
+  passive-interface default
+  vrf vrfLAN
+router bgp 65002
   template peer SPINE
-    remote-as 65000
-    update-source loopback1
+    remote-as 65002
+    update-source loopback0
     address-family l2vpn evpn
       send-community
       send-community extended
-  neighbor 10.77.255.1
+  neighbor 10.66.255.1
     inherit peer SPINE
-  neighbor 10.77.255.2
+  neighbor 10.66.255.2
     inherit peer SPINE
+  vrf vrfLAN
+    address-family ipv4 unicast
+      redistribute ospf 5 route-map rmRedistOSPF
 evpn
-  vni 10010 l2
+  vni 10020 l2
     rd auto
-    route-target import auto
-    route-target export auto
+    route-target import 9999:10020
+    route-target export 9999:10020
+  vni 10050 l2
+    rd auto
+    route-target import 9999:10050
+    route-target export 9999:10050
 
 
 </code></pre>

@@ -1,13 +1,13 @@
 <pre><code>
 !
-! Last configuration change at 12:53:55 EET Sat Mar 13 2021
+! Last configuration change at 12:55:32 EET Mon Mar 29 2021
 !
 version 15.4
 service timestamps debug datetime msec
 service timestamps log datetime msec
 no service password-encryption
 !
-hostname R7
+hostname b-fw-wan11
 !
 boot-start-marker
 boot-end-marker
@@ -31,16 +31,11 @@ mmi snmp-timeout 180
 
 
 !
-ip vrf vrfA
-!
-ip vrf vrfB
-!
-ip vrf vrfC
+ip vrf vrfLAN
 !
 !
 !
 !
-no ip domain lookup
 ip cef
 no ipv6 cef
 !
@@ -56,7 +51,6 @@ multilink bundle-name authenticated
 !
 redundancy
 !
-no cdp run
 !
 ! 
 !
@@ -71,30 +65,22 @@ no cdp run
 !
 !
 !
-interface Loopback150
- ip vrf forwarding vrfC
- ip address 192.168.150.7 255.255.255.255
-!
 interface Ethernet0/0
  no ip address
 !
-interface Ethernet0/0.20
- encapsulation dot1Q 20
- ip vrf forwarding vrfA
- ip address 192.168.20.7 255.255.255.0
- no cdp enable
-!
-interface Ethernet0/0.30
- encapsulation dot1Q 30
- ip vrf forwarding vrfB
- ip address 192.168.30.7 255.255.255.0
- no cdp enable
+interface Ethernet0/0.11
 !
 interface Ethernet0/0.50
  encapsulation dot1Q 50
- ip vrf forwarding vrfC
- ip address 192.168.50.7 255.255.255.0
- no cdp enable
+ ip address 10.90.50.1 255.255.255.0
+ no ip redirects
+ no ip proxy-arp
+ ip ospf 1 area 0
+!
+interface Ethernet0/0.111
+ encapsulation dot1Q 111
+ ip address 10.90.255.1 255.255.255.0
+ ip ospf 1 area 0
 !
 interface Ethernet0/1
  no ip address
@@ -108,15 +94,17 @@ interface Ethernet0/3
  no ip address
  shutdown
 !
+router ospf 1
+ router-id 10.90.255.1
+ passive-interface default
+ no passive-interface Ethernet0/0.111
+!
 ip forward-protocol nd
 !
 !
 no ip http server
 no ip http secure-server
-ip route 192.168.0.0 255.255.0.0 192.168.10.1
-ip route vrf vrfA 192.168.0.0 255.255.0.0 192.168.20.1
-ip route vrf vrfB 192.168.0.0 255.255.0.0 192.168.30.1
-ip route vrf vrfC 192.168.0.0 255.255.0.0 192.168.50.1
+ip route 10.0.0.0 255.0.0.0 10.90.255.2
 !
 !
 !
@@ -140,5 +128,81 @@ line vty 0 4
 !
 end
 
-</code></pre>
+b-fw-wan11#exit
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+b-fw-wan11 con0 is now available
+
+
+
+
+
+Press RETURN to get started.
+
+
+
+
+
+
+
+
 

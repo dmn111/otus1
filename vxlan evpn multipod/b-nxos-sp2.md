@@ -1,11 +1,11 @@
 <pre><code>
 !Command: show running-config
-!Running configuration last done at: Tue Mar  9 21:02:12 2021
-!Time: Sat Mar 13 13:01:47 2021
+!Running configuration last done at: Sat Mar 27 19:23:49 2021
+!Time: Sat Mar 27 19:26:01 2021
 
 version 9.2(2) Bios:version  
-hostname a-nxos-lf3
-vdc a-nxos-lf3 id 1
+hostname b-nxos-sp2
+vdc b-nxos-sp2 id 1
   limit-resource vlan minimum 16 maximum 4094
   limit-resource vrf minimum 2 maximum 4096
   limit-resource port-channel minimum 0 maximum 511
@@ -14,122 +14,64 @@ vdc a-nxos-lf3 id 1
   limit-resource m4route-mem minimum 58 maximum 58
   limit-resource m6route-mem minimum 8 maximum 8
 
-cfs eth distribute
 nv overlay evpn
 feature ospf
 feature bgp
-feature interface-vlan
-feature vn-segment-vlan-based
-feature lacp
-feature vpc
-feature bfd
-feature nv overlay
 
 no password strength-check
-username admin password 5 $5$.WiKlTnT$oTtQVzI5pxJQ16F8rwyVGLs8Q9U8FQQS3FO9LYcv0v/  role network-admin
+username admin password 5 $5$bPZ1XbkZ$Ayq9Sk12GjJX1dGwMdiDV4ECA9yfDczV9eJjVQFoAN7  role network-admin
 ip domain-lookup
 copp profile strict
-snmp-server user admin network-admin auth md5 0x77441106e28e6649f5526d17d7b61c47 priv 0x77441106e28e6649f5526d17d7b61c47 localizedkey
+snmp-server user admin network-admin auth md5 0xbd312e598a5441167d81c10d699cee86 priv 0xbd312e598a5441167d81c10d699cee86 localizedkey
 rmon event 1 description FATAL(1) owner PMON@FATAL
 rmon event 2 description CRITICAL(2) owner PMON@CRITICAL
 rmon event 3 description ERROR(3) owner PMON@ERROR
 rmon event 4 description WARNING(4) owner PMON@WARNING
 rmon event 5 description INFORMATION(5) owner PMON@INFO
 
-fabric forwarding anycast-gateway-mac 0000.0000.0010
-vlan 1,10,999
-vlan 10
-  vn-segment 10010
-vlan 999
-  vn-segment 10999
+vlan 1
 
+route-map rmNH-unchanged permit 10
+  set ip next-hop unchanged
 vrf context management
-vrf context vrfABC
-  vni 10999
-  rd auto
-  address-family ipv4 unicast
-    route-target both auto
-    route-target both auto evpn
-vrf context vrfKEEP
-hardware access-list tcam region racl 512
-hardware access-list tcam region arp-ether 256 double-wide
-vpc domain 1
-  peer-switch
-  peer-keepalive destination 172.31.255.4 source 172.31.255.3 vrf vrfKEEP
 
-
-interface Vlan1
-
-interface Vlan10
-  no shutdown
-  vrf member vrfABC
-  no ip redirects
-  ip address 192.168.10.1/24
-  fabric forwarding mode anycast-gateway
-
-interface Vlan999
-  no shutdown
-  vrf member vrfABC
-  ip forward
-
-interface port-channel5
-  switchport mode trunk
-  switchport trunk allowed vlan 1,10
-  spanning-tree port type network
-  vpc peer-link
-
-interface port-channel10
-  switchport access vlan 10
-  vpc 10
-
-interface nve1
-  no shutdown
-  host-reachability protocol bgp
-  source-interface loopback3
-  member vni 10010
-    suppress-arp
-    ingress-replication protocol bgp
-  member vni 10999 associate-vrf
 
 interface Ethernet1/1
-  switchport access vlan 10
-  channel-group 10 mode active
+  description DCI Link-1
+  no switchport
+  ip address 10.1.1.6/30
+  ip ospf network point-to-point
+  no ip ospf passive-interface
+  ip router ospf 1 area 0.0.0.0
+  no shutdown
 
 interface Ethernet1/2
   no switchport
-  no ip redirects
-  ip address 10.77.1.2/30
-  no ipv6 redirects
+  ip address 10.1.2.5/30
   ip ospf network point-to-point
   no ip ospf passive-interface
   ip router ospf 1 area 0.0.0.0
   no shutdown
 
 interface Ethernet1/3
+
+interface Ethernet1/4
   no switchport
-  no ip redirects
-  ip address 10.77.2.6/30
-  no ipv6 redirects
+  ip address 10.66.2.5/30
   ip ospf network point-to-point
   no ip ospf passive-interface
   ip router ospf 1 area 0.0.0.0
   no shutdown
 
-interface Ethernet1/4
+interface Ethernet1/5
   no switchport
-  vrf member vrfKEEP
-  ip address 172.31.255.3/29
+  ip address 10.1.1.10/30
+  ip ospf network point-to-point
+  no ip ospf passive-interface
+  ip router ospf 1 area 0.0.0.0
   no shutdown
 
-interface Ethernet1/5
-  switchport mode trunk
-  switchport trunk allowed vlan 1,10
-  channel-group 5 mode active
-
 interface Ethernet1/6
-  switchport mode trunk
-  switchport trunk allowed vlan 1,10
-  channel-group 5 mode active
 
 interface Ethernet1/7
 
@@ -378,35 +320,51 @@ interface Ethernet1/128
 interface mgmt0
   vrf member management
 
-interface loopback1
-  ip address 10.77.255.3/32
-  ip router ospf 1 area 0.0.0.0
-
-interface loopback3
-  ip address 10.77.253.3/32
-  ip address 10.77.253.5/32 secondary
+interface loopback0
+  ip address 10.66.255.2/32
   ip router ospf 1 area 0.0.0.0
 line console
 line vty
 boot nxos bootflash:/nxos.9.2.2.bin 
 router ospf 1
-  router-id 10.77.255.3
+  router-id 10.66.255.2
   passive-interface default
-router bgp 65000
-  template peer SPINE
-    remote-as 65000
-    update-source loopback1
+router bgp 65002
+  template peer LEAF
+    remote-as 65002
+    update-source loopback0
     address-family l2vpn evpn
       send-community
       send-community extended
+      route-reflector-client
+  template peer SPINE65001
+    remote-as 65001
+    update-source loopback0
+    ebgp-multihop 10
+    address-family l2vpn evpn
+      send-community
+      send-community extended
+      route-map rmNH-unchanged out
+  template peer SPINE65003
+    remote-as 65003
+    update-source loopback0
+    ebgp-multihop 10
+    address-family l2vpn evpn
+      send-community
+      send-community extended
+      route-map rmNH-unchanged out
+  neighbor 10.55.255.1
+    inherit peer SPINE65003
+  neighbor 10.55.255.2
+    inherit peer SPINE65003
+  neighbor 10.66.255.3
+    inherit peer LEAF
+    no shutdown
+  neighbor 10.66.255.4
+    inherit peer LEAF
   neighbor 10.77.255.1
-    inherit peer SPINE
+    inherit peer SPINE65001
   neighbor 10.77.255.2
-    inherit peer SPINE
-evpn
-  vni 10010 l2
-    rd auto
-    route-target import auto
-    route-target export auto
+    inherit peer SPINE65001
 
 </code></pre>
