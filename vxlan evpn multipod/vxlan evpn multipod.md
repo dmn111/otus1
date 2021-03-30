@@ -4,7 +4,7 @@
 
 #####   Задание.
 
- Выбрать технологию и реализовать модель сетевой схемы  для  объединения трех ЦОД.     Для  ЦОД имеются следующие исходные данные:  ЦОД  географически расположенные в одном населенном пункте и объединены между собой собственной оптической линией связи. Необходимо обеспечить L2 связность между ЦОД для overlay сети .  ЦОД  не в полной мере укомплектованы оборудованием для релизациия полноценной схемы CLOS.
+ Выбрать технологию и реализовать модель сетевой схемы  для  объединения трех ЦОД. Для ЦОД имеются следующие исходные данные. ЦОД  географически расположенные в одном населенном пункте и объединены между собой собственной оптической линией связи. Необходимо обеспечить L2 связность между ЦОД для overlay сети. ЦОД  не в полной мере укомплектованы оборудованием для релизациия полноценной схемы CLOS.
 
 В рамках  задания выпонить следующие пункты:
  1.	Обосновать выбор   технологии для объединения ЦОД.
@@ -199,13 +199,13 @@ AS65003
 
 Конфигурация оборудования :
 
-[a-nxos-sp1](https://github.com/dmn111/otus1/blob/master/vxlan%20evpn%20type-5/a-nxos-sp1.conf.md)
+[a-nxos-sp1](https://github.com/dmn111/otus1/blob/master/vxlan%20evpn%20multipod/a-nxos-sp1.md)
 
-[a-nxos-sp2](https://github.com/dmn111/otus1/blob/master/vxlan%20evpn%20type-5/a-nxos-sp2.conf.md)
+[a-nxos-sp2](https://github.com/dmn111/otus1/blob/master/vxlan%20evpn%20multipod/a-nxos-sp2.md)
 
-[a-nxos-lf3](https://github.com/dmn111/otus1/blob/master/vxlan%20evpn%20type-5/a-nxos-lf3.conf.md)
+[a-nxos-lf3](https://github.com/dmn111/otus1/blob/master/vxlan%20evpn%20multipod/a-nxos-lf3.md)
 
-[a-nxos-lf4](https://github.com/dmn111/otus1/blob/master/vxlan%20evpn%20type-5/a-nxos-lf4.conf.md)
+[a-esx-01](https://github.com/dmn111/otus1/blob/master/vxlan%20evpn%20multipod/a-esx-01.md)
 
 [a-nxos-lf7](https://github.com/dmn111/otus1/blob/master/vxlan%20evpn%20type-5/a-nxos-lf7.conf.md)
 
