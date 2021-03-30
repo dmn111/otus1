@@ -207,8 +207,20 @@ AS65003
 
 [a-esx-01](https://github.com/dmn111/otus1/blob/master/vxlan%20evpn%20multipod/a-esx-01.md)
 
-[a-nxos-lf7](https://github.com/dmn111/otus1/blob/master/vxlan%20evpn%20type-5/a-nxos-lf7.conf.md)
+[b-nxos-sp1](https://github.com/dmn111/otus1/blob/master/vxlan%20evpn%20multipod/b-nxos-sp1.md)
 
-[R7](https://github.com/dmn111/otus1/blob/master/vxlan%20evpn%20type-5/R7.conf.md)
+[b-nxos-sp2](https://github.com/dmn111/otus1/blob/master/vxlan%20evpn%20multipod/b-nxos-sp2.md)
 
-[SW10](https://github.com/dmn111/otus1/blob/master/vxlan%20evpn%20type-5/SW10.conf.md)
+[b-nxos-lf3](https://github.com/dmn111/otus1/blob/master/vxlan%20evpn%20multipod/b-nxos-lf3.md)
+
+[b-wf-wan11](https://github.com/dmn111/otus1/blob/master/vxlan%20evpn%20multipod/b-fw-wan11.md)
+
+[c-nxos-sp1](https://github.com/dmn111/otus1/blob/master/vxlan%20evpn%20multipod/c-nxos-sp1.md)
+
+[c-nxos-sp2](https://github.com/dmn111/otus1/blob/master/vxlan%20evpn%20multipod/c-nxos-sp2.md)
+
+[c-db-01](https://github.com/dmn111/otus1/blob/master/vxlan%20evpn%20multipod/c-db-01.md)
+
+[c-lb-01](https://github.com/dmn111/otus1/blob/master/vxlan%20evpn%20multipod/c-lb-01.md)
+
+[c-sw5](https://github.com/dmn111/otus1/blob/master/vxlan%20evpn%20multipod/c-sw5.md)
