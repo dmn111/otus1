@@ -1,8 +1,7 @@
 <pre><code>
-
 !Command: show running-config
-!Running configuration last done at: Mon Mar 29 11:07:56 2021
-!Time: Mon Mar 29 21:10:58 2021
+!Running configuration last done at: Fri Apr 16 20:05:10 2021
+!Time: Fri Apr 16 21:38:39 2021
 
 version 9.2(2) Bios:version  
 hostname b-nxos-lf3
@@ -21,7 +20,6 @@ feature ospf
 feature bgp
 feature interface-vlan
 feature vn-segment-vlan-based
-feature lacp
 feature vpc
 feature nv overlay
 
@@ -36,9 +34,10 @@ rmon event 3 description ERROR(3) owner PMON@ERROR
 rmon event 4 description WARNING(4) owner PMON@WARNING
 rmon event 5 description INFORMATION(5) owner PMON@INFO
 
-vlan 1,20,50,111,999
-vlan 20
-  vn-segment 10020
+fabric forwarding anycast-gateway-mac 0000.0000.7777
+vlan 1,10,20,50,111,999
+vlan 10
+  vn-segment 10010
 vlan 50
   vn-segment 10050
 vlan 999
@@ -61,12 +60,15 @@ vrf context vrfLAN
 
 interface Vlan1
 
-interface Vlan20
+interface Vlan10
+  no shutdown
   vrf member vrfLAN
+  no ip redirects
+  ip address 10.90.10.1/24
+  fabric forwarding mode anycast-gateway
 
 interface Vlan50
   vrf member vrfDMZ
-  ip address 10.90.50.254/24
 
 interface Vlan111
   no shutdown
@@ -84,7 +86,7 @@ interface nve1
   no shutdown
   host-reachability protocol bgp
   source-interface loopback1
-  member vni 10020
+  member vni 10010
     ingress-replication protocol bgp
   member vni 10050
     ingress-replication protocol bgp
@@ -115,12 +117,14 @@ interface Ethernet1/3
   switchport trunk allowed vlan 50,111
 
 interface Ethernet1/4
+  switchport access vlan 10
 
 interface Ethernet1/5
 
 interface Ethernet1/6
 
 interface Ethernet1/7
+  switchport access vlan 10
 
 interface Ethernet1/8
 
@@ -399,10 +403,10 @@ router bgp 65002
     address-family ipv4 unicast
       redistribute ospf 5 route-map rmRedistOSPF
 evpn
-  vni 10020 l2
+  vni 10010 l2
     rd auto
-    route-target import 9999:10020
-    route-target export 9999:10020
+    route-target import 9999:10010
+    route-target export 9999:10010
   vni 10050 l2
     rd auto
     route-target import 9999:10050
