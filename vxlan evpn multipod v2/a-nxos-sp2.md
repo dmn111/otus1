@@ -356,18 +356,6 @@ router bgp 65001
       send-community
       send-community extended
       route-map rmNH-unchanged out
-  template peer SPINE65003
-    remote-as 65003
-    update-source loopback0
-    ebgp-multihop 10
-    address-family l2vpn evpn
-      send-community
-      send-community extended
-      route-map rmNH-unchanged out
-  neighbor 10.55.255.1
-    inherit peer SPINE65003
-  neighbor 10.55.255.2
-    inherit peer SPINE65003
   neighbor 10.66.255.1
     inherit peer SPINE65002
   neighbor 10.66.255.2
